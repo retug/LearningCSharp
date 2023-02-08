@@ -29,9 +29,11 @@ namespace WindowsFormsApp1
     public class PointVector
     {
         public List<double> XYZ {get; set; }
+        public List<double> refPnt { get; set; }
         public double X { get; set; }
         public double Y { get; set; }
         public double Z { get; set; }
+        public List<double> LocalCoords { get; set; }
 
 
         //This is the constructor, redefine the point?
@@ -42,29 +44,37 @@ namespace WindowsFormsApp1
             Y = xyz[1];
             Z = xyz[2];
         }
+
+        public void glo_to_loc(GlobalCoordinateSystem globalCoords, Point refPoint)
+        {
+            double[] part1 = new double[] { X - refPoint.X, Y - refPoint.Y, Z - refPoint.Z };
+            List<double> local_coords = new List<double>();
+
+            //the class will now have new attribute of local coordinates point.LocalCoords[0] = the X local coordinate system
+            LocalCoords = new List<double>() { globalCoords.R_Inv[0, 0] * part1[0] + globalCoords.R_Inv[0, 1] * part1[0] + globalCoords.R_Inv[0, 2] * part1[0] ,
+            globalCoords.R_Inv[1, 0] * part1[1] + globalCoords.R_Inv[1, 1] * part1[1] + globalCoords.R_Inv[1, 2] * part1[1],
+            globalCoords.R_Inv[2, 0] * part1[2] + globalCoords.R_Inv[2, 1] * part1[2] + globalCoords.R_Inv[2, 2] * part1[2]};
+        }
     }
     public class GlobalCoordinateSystem
     {
-        public List<double> XYZ { get; set; }
+        public List<double> RefPnt { get; set; }
         public List<double> Vector { get; set; }
         public double hyp { get; set; }
         public double[,] R { get; set; }
         public string inverseMatrixText { get; set; }
-        public Matrix<double> customMatrix { get; set; }
-        public Matrix<double> inverseMyCustomMatrix { get; set; }
+        public Matrix<double> R_Matrix { get; set; }
+        public double[,] R_Inv { get; set; }
         //This is the constructor, redefine the point?
         public GlobalCoordinateSystem(List<double> xyz, List<double> vector)
         {
+            RefPnt = xyz; 
             hyp = Math.Sqrt((vector[0]* vector[0] + vector[1]* vector[1]));
-
+            Vector = vector;
             R = new double[,] { { vector[0] / hyp, -vector[1] / hyp, 0 }, { vector[1] / hyp, vector[0] / hyp, 0 }, { 0, 0, 1 } };
-
-            customMatrix = Matrix<double>.Build.DenseOfArray(R);
-            inverseMyCustomMatrix = customMatrix.Inverse();
-
-            inverseMatrixText = inverseMyCustomMatrix.ToString("F2");
-
-
+            R_Matrix = Matrix<double>.Build.DenseOfArray(R);
+            R_Inv = R_Matrix.Inverse().ToArray();
+            //inverseMatrixText = R_Inv.ToString("F2");
         }
     }
 

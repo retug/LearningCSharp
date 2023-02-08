@@ -22,22 +22,21 @@ namespace WindowsFormsApp1
         {
             name = "John Doe";
            
-            Point myPoint = new Point(1.2,0.6,0.25);
-
+            //Point myPoint = new Point(1.2,0.6,0.25);
 
             //this syntax is a bit confusing
             List<double> valueXYZ = new List<double>() { 1.0, 0.0, 0.0 };
             
             PointVector pointVector = new PointVector(valueXYZ);
-
             List<double> vector = new List<double>() { 1.0, 1.0, 0 };
-
             GlobalCoordinateSystem globalCoordinateSystem = new GlobalCoordinateSystem(valueXYZ, vector);
-            int x = 2;
-            //MessageBox.Show(globalCoordinateSystem.R.ToString());
+            Point refPoint = new Point(0, 0, 0);
+            PointVector myPoint = new PointVector(vector);
+            myPoint.glo_to_loc(globalCoordinateSystem, refPoint);
 
-
-
+            MessageBox.Show(globalCoordinateSystem.R[2,1].ToString());
+            //MessageBox.Show(globalCoordinateSystem.inverseMatrixText);
+            MessageBox.Show("Your X value is = " + myPoint.LocalCoords[0].ToString() + "Your Y value is = " + myPoint.LocalCoords[1].ToString()+ "Your Z value is = " + myPoint.LocalCoords[2].ToString());
 
         }
 
