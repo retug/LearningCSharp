@@ -51,6 +51,7 @@ namespace WindowsFormsApp1
         public double[,] R { get; set; }
         public string inverseMatrixText { get; set; }
         public Matrix<double> customMatrix { get; set; }
+        public Matrix<double> inverseMyCustomMatrix { get; set; }
         //This is the constructor, redefine the point?
         public GlobalCoordinateSystem(List<double> xyz, List<double> vector)
         {
@@ -58,10 +59,10 @@ namespace WindowsFormsApp1
 
             R = new double[,] { { vector[0] / hyp, -vector[1] / hyp, 0 }, { vector[1] / hyp, vector[0] / hyp, 0 }, { 0, 0, 1 } };
 
-            //Matrix<double> customMatrix = Matrix<double>.Build.DenseOfArray(R);
-            //Matrix<double> inverseMyCustomMatrix = customMatrix.Inverse();
+            customMatrix = Matrix<double>.Build.DenseOfArray(R);
+            inverseMyCustomMatrix = customMatrix.Inverse();
 
-            //string inverseMatrixText = customMatrix.ToString("F2");
+            inverseMatrixText = inverseMyCustomMatrix.ToString("F2");
 
 
         }
