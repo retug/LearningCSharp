@@ -45,26 +45,30 @@ namespace WindowsFormsApp1
             Y = xyz[1];
             Z = xyz[2];
         }
-        public void glo_to_loc(GlobalCoordinateSystem globalCoords, Point refPoint)
+        public void glo_to_loc(GlobalCoordinateSystem globalCoords)
         {
-            double[] part1 = new double[] { X - refPoint.X, Y - refPoint.Y, Z - refPoint.Z };
-            
+            double[] part1 = new double[] { X - globalCoords.RefPnt[0], Y - globalCoords.RefPnt[1], Z - globalCoords.RefPnt[2] };
+
 
             //the class will now have new attribute of local coordinates point.LocalCoords[0] = the X local coordinate system
-            LocalCoords = new List<double>() { globalCoords.R_Inv[0, 0] * part1[0] + globalCoords.R_Inv[0, 1] * part1[0] + globalCoords.R_Inv[0, 2] * part1[0] ,
-            globalCoords.R_Inv[1, 0] * part1[1] + globalCoords.R_Inv[1, 1] * part1[1] + globalCoords.R_Inv[1, 2] * part1[1],
-            globalCoords.R_Inv[2, 0] * part1[2] + globalCoords.R_Inv[2, 1] * part1[2] + globalCoords.R_Inv[2, 2] * part1[2]};
+            LocalCoords = new List<double>() { globalCoords.R_Inv[0, 0] * part1[0] + globalCoords.R_Inv[0, 1] * part1[1] + globalCoords.R_Inv[0, 2] * part1[2] ,
+            globalCoords.R_Inv[1, 0] * part1[0] + globalCoords.R_Inv[1, 1] * part1[1] + globalCoords.R_Inv[1, 2] * part1[2],
+            globalCoords.R_Inv[2, 0] * part1[0] + globalCoords.R_Inv[2, 1] * part1[1] + globalCoords.R_Inv[2, 2] * part1[2]};
+            
+
+
+
         }
         public void loc_to_glo(GlobalCoordinateSystem globalCoords)
         {
             //this is the ref point
-            double[] part1 = new double[] { X, Y, Z };
+            double[] part2 = new double[] { X, Y, Z };
             
 
             //the class will now have new attribute of local coordinates point.LocalCoords[0] = the X local coordinate system
-            GlobalCoords = new List<double>() { (globalCoords.R[0, 0] * X + globalCoords.R[0, 1] * X + globalCoords.R[0, 2] * Y) + globalCoords.RefPnt[0],
-            (globalCoords.R[1, 0] * Y + globalCoords.R[1, 1] * Y + globalCoords.R[1, 2] * Y) + globalCoords.RefPnt[1],
-            (globalCoords.R[2, 0] * Z + globalCoords.R[2, 1] * Z + globalCoords.R[2, 2] * Z) + globalCoords.RefPnt[2]};
+            GlobalCoords = new List<double>() { (globalCoords.R[0, 0] * X + globalCoords.R[0, 1] * Y + globalCoords.R[0, 2] * Z) + globalCoords.RefPnt[0],
+            (globalCoords.R[1, 0] * X + globalCoords.R[1, 1] * Y + globalCoords.R[1, 2] * Z) + globalCoords.RefPnt[1],
+            (globalCoords.R[2, 0] * X + globalCoords.R[2, 1] * Y + globalCoords.R[2, 2] * Z) + globalCoords.RefPnt[2]};
         }
     }
     public class GlobalCoordinateSystem
