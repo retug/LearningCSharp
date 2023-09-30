@@ -8,7 +8,7 @@ using System.Windows.Media;
 
 namespace WpfApp1;
 
-public partial class ViewModel : ObservableObject
+public class ViewModel : ObservableObject
 {
     public ISeries[] Series { get; set; } =
     {
