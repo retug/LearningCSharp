@@ -8,39 +8,68 @@ using LiveChartsCore.SkiaSharpView.VisualElements;
 using SkiaSharp;
 using System.Collections.Generic;
 using System;
-using System.Collections.Generic;
+
 using System.Linq;
+using LiveChartsCore.Kernel.Sketches;
+
 
 namespace WpfApp1;
 
 
 public class Data
 {
-    public void ProcessData()
+    public void ProcessData(ViewModel ViewModel)
     {
         List<double> testX = new List<double> { 0, 20, 0, 20 };
         List<double> testY = new List<double> { 0, 0, 20, 20 };
+        List<string> names = new List<string> { "A", "B", "A", "B" };
 
-        for (int i = 0; i < testX.Count(); i++)
+        //LiveChartsCore.SkiaSharpView.WPF.CartesianChart gridPlot = new LiveChartsCore.SkiaSharpView.WPF.CartesianChart();
+
+        List<LineSeries<ObservablePoint>> GridSeries = new List<LineSeries<ObservablePoint>>();
+        
+
+        for (int i = 0; i < testX.Count()/2; i++)
         {
+            var areaPoints = new List<ObservablePoint>();
+
+            ObservablePoint testStart = new LiveChartsCore.Defaults.ObservablePoint();
+            testStart.X = testX[i*2];
+            testStart.Y = testY[i*2];
+            ObservablePoint testEnd= new LiveChartsCore.Defaults.ObservablePoint();
+            testEnd.X = testX[i*2+1];
+            testEnd.Y = testY[i*2+1];
+
+            areaPoints.Add(testStart);
+            areaPoints.Add(testEnd);
+
+            var lineSeries = new LineSeries<ObservablePoint>
+            {
+                Values = areaPoints,
+                Name = names[i],
+                Fill = null
+            };
+            GridSeries.Add(lineSeries);
+            
 
         }
+        ViewModel.GridSeries = GridSeries;
+
     }
-    
-              
 }
 
 
 public class ViewModel : ObservableObject
 {
-    List<double> testX = new List<double> { 0, 20, 0, 20 };
-    List<double> testY = new List<double> { 0, 0, 20, 20 };
+    public ViewModel() //constructor of view model
+    {
+        GridSeries = new List<LineSeries<ObservablePoint>>();
+        // Create an instance of the Data class
+        Data dataProcessor = new Data();
 
-    LiveChartsCore.Defaults.ObservablePoint test = new LiveChartsCore.Defaults.ObservablePoint();
-    
-    
-
-
+        // Call the ProcessData method to populate GridSeries
+        dataProcessor.ProcessData(this);
+    }
 
     public ISeries[] Series { get; set; } =
     {
@@ -78,18 +107,10 @@ public class ViewModel : ObservableObject
             Padding = new LiveChartsCore.Drawing.Padding(15),
             
         };
-    // https://livecharts.dev/docs/WPF/2.0.0-rc1/samples.general.sections2
 
 
-    public ISeries[] Series3 { get; set; } =
-    {
-        new LineSeries<double>
-        {
-            
-            //ChartValues<LiveChartsCore.Defaults.ObservablePoint> areaPoints = new LiveCharts.ChartValues<LiveCharts.Defaults.ObservablePoint>();
-        }
-    };
-
+    
+    public List<LineSeries<ObservablePoint>> GridSeries { get; set; }
 
 }
 

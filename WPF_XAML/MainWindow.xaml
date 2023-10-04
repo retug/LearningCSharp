@@ -17,6 +17,6 @@
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <lvc:CartesianChart Grid.Column="0" Series="{Binding Series2}" Title="{Binding Title2}" />
-        <lvc:CartesianChart Grid.Column="1" Series="{Binding Series}" Title="{Binding Title}" />
+        <lvc:CartesianChart Grid.Column="1" Series="{Binding GridSeries}" Title="{Binding Title}" />
     </Grid>
 </Window>
