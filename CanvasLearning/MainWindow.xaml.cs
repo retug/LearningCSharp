@@ -22,6 +22,7 @@ namespace WpfApp1
     {
         private double zoomFactor = 1.0;
         private Point lastMousePosition;
+        private List<Line> selectedLines = new List<Line>();
         public MainWindow()
         {
             InitializeComponent();
@@ -34,56 +35,34 @@ namespace WpfApp1
             canvas.MouseMove += Canvas_MouseMove;
             canvas.MouseLeftButtonUp += Canvas_MouseLeftButtonUp;
 
-            // Line 1: (0,0) to (10,10)
-            Line line1 = new Line
+            CustomLine lineC1 = new CustomLine(new Point(0, 0), new Point(10, 10), "A");
+            CustomLine lineC2 = new CustomLine(new Point(5, 5), new Point(5, 15), "B");
+            CustomLine lineC3 = new CustomLine(new Point(0, 0), new Point(10, 0), "C");
+
+            List<CustomLine> MyLines = new List<CustomLine>();
+            MyLines.Add(lineC1);   
+            MyLines.Add(lineC2);
+            MyLines.Add(lineC3);
+
+            foreach (var line in MyLines)
             {
-                X1 = 0,
-                Y1 = 0,
-                X2 = 10,
-                Y2 = 10,
-                Stroke = Brushes.Black,
-                StrokeThickness = 2
-            };
+                Line lineX = new Line
+                {
+                    X1 = line.StartPoint.X,
+                    Y1 = line.StartPoint.Y,
+                    X2 = line.EndPoint.X,
+                    Y2 = line.EndPoint.Y,
+                    Stroke = Brushes.Black,
+                    StrokeThickness = 2,
+                    Tag = line // Set the Tag property to the CustomLine object, need to read up on Tag
+                };
+                canvas.Children.Add(lineX);
+                lineX.MouseEnter += Line_MouseEnter;
+                lineX.MouseLeave += Line_MouseLeave;
+                AddCircleWithText(line.EndPoint.X, line.EndPoint.Y, line.Name);
 
-            // Line 2: (5,5) to (5,15)
-            Line line2 = new Line
-            {
-                X1 = 5,
-                Y1 = 5,
-                X2 = 5,
-                Y2 = 15,
-                Stroke = Brushes.Black,
-                StrokeThickness = 2
-            };
-
-            // Line 3: (0,0) to (10,0)
-            Line line3 = new Line
-            {
-                X1 = 0,
-                Y1 = 0,
-                X2 = 10,
-                Y2 = 0,
-                Stroke = Brushes.Black,
-                StrokeThickness = 2
-            };
-
-            // Add lines to the canvas
-            canvas.Children.Add(line1);
-            canvas.Children.Add(line2);
-            canvas.Children.Add(line3);
-
-            // Attach event handlers
-            line1.MouseEnter += Line_MouseEnter;
-            line1.MouseLeave += Line_MouseLeave;
-            line2.MouseEnter += Line_MouseEnter;
-            line2.MouseLeave += Line_MouseLeave;
-            line3.MouseEnter += Line_MouseEnter;
-            line3.MouseLeave += Line_MouseLeave;
-
-            // Add circles at the end of each line
-            AddCircleWithText(10, 10, "A");
-            AddCircleWithText(5, 15, "B");
-            AddCircleWithText(10, 0, "C");
+            }
+            AdjustZoomToFitLines();
         }
 
         private void ScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
@@ -105,10 +84,40 @@ namespace WpfApp1
             canvas.LayoutTransform = new ScaleTransform(zoomFactor, zoomFactor);
         }
 
+        //TESTING FOR CLICKING ON LINES
         private void Canvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
+            //PANNING FUNCTION
             lastMousePosition = e.GetPosition(scrollViewer);
             canvas.CaptureMouse();
+
+            if (e.OriginalSource is Line line)
+            {
+                // Clicked on a line, add it to the selectedLines list
+                if (!selectedLines.Contains(line))
+                {
+                    line.Stroke = Brushes.Red;
+                    selectedLines.Add(line);
+                    selectedLinesListBox.Items.Add(((CustomLine)line.Tag).Name); // Add the name to the list, pure chatgpt here
+                }
+            }
+        }
+
+        private void Canvas_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            canvas.ReleaseMouseCapture();
+        }
+
+        //END PANNING FUNCTION
+
+        private void ClearSelection_Click(object sender, RoutedEventArgs e)
+        {
+            foreach (Line line in selectedLines)
+            {
+                line.Stroke = Brushes.Black;
+            }
+            selectedLines.Clear();
+            selectedLinesListBox.Items.Clear(); // Clear the list of selected lines
         }
 
         private void Canvas_MouseMove(object sender, MouseEventArgs e)
@@ -129,10 +138,6 @@ namespace WpfApp1
             }
         }
 
-        private void Canvas_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-        {
-            canvas.ReleaseMouseCapture();
-        }
 
         private void AddCircleWithText(double x, double y, string text)
         {
@@ -181,6 +186,36 @@ namespace WpfApp1
                 // Change line color back to black when the mouse leaves
                 line.Stroke = Brushes.Black;
             }
+        }
+
+        private void AdjustZoomToFitLines()
+        {
+            // Calculate the maximum X and Y coordinates of your lines
+            double maxX = double.MinValue;
+            double maxY = double.MinValue;
+
+            foreach (Line line in canvas.Children.OfType<Line>())
+            {
+                maxX = Math.Max(maxX, Math.Max(line.X1, line.X2));
+                maxY = Math.Max(maxY, Math.Max(line.Y1, line.Y2));
+            }
+
+            // Calculate the desired center point
+            double centerX = maxX / 2;
+            double centerY = maxY / 2;
+
+            // Calculate the zoom factor required to fit the entire content within the canvas view
+            double canvasWidth = canvas.ActualWidth;
+            double canvasHeight = canvas.ActualHeight;
+
+            double zoomX = canvasWidth / maxX;
+            double zoomY = canvasHeight / maxY;
+
+            double zoomFactor = Math.Min(zoomX, zoomY);
+
+            // Apply the calculated zoom factor and center point to the canvas
+            canvas.LayoutTransform = new ScaleTransform(zoomFactor, zoomFactor);
+            canvas.RenderTransform = new TranslateTransform(centerX - canvasWidth / 2, centerY - canvasHeight / 2);
         }
     }
 }

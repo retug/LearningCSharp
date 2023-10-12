@@ -5,11 +5,26 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApp1"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="1000" Width="1000">
     <Grid>
-        <ScrollViewer Name="scrollViewer" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-            <Canvas Name="canvas" HorizontalAlignment="Center" VerticalAlignment="Center" Width="600" Height="600">
-            </Canvas>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <ScrollViewer Name="scrollViewer" Grid.Row="0" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+            <Border BorderBrush="Black" BorderThickness="4">
+                <Canvas Name="canvas" Width="600" Height="600" MouseMove="Canvas_MouseMove">
+                    <!-- Your lines and circles go here -->
+                </Canvas>
+            </Border>
         </ScrollViewer>
+
+        <StackPanel Grid.Row="1" VerticalAlignment="Top" HorizontalAlignment="Left">
+            <Button Content="Clear Selection" Margin="10" Click="ClearSelection_Click" />
+
+            <!-- List of selected line names -->
+            <ListBox Name="selectedLinesListBox" Width="200" Height="200" VerticalAlignment="Top" />
+        </StackPanel>
     </Grid>
 </Window>
