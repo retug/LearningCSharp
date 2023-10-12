@@ -5,14 +5,21 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApp1"
         mc:Ignorable="d"
-        Title="MainWindow" Height="1000" Width="1000">
+        Title="R2R" Height="1000" Width="1000">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
+            <RowDefinition Height="*" />
         </Grid.RowDefinitions>
 
-        <ScrollViewer Name="scrollViewer" Grid.Row="0" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+
+
+        <!-- Left column content RAM Info, ROW 0 COLUMN 0 -->
+        <ScrollViewer Name="scrollViewer" Grid.Column="0" Grid.Row="0" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
             <Border BorderBrush="Black" BorderThickness="4">
                 <Canvas Name="canvas" Width="600" Height="600" MouseMove="Canvas_MouseMove">
                     <!-- Your lines and circles go here -->
@@ -20,11 +27,29 @@
             </Border>
         </ScrollViewer>
 
-        <StackPanel Grid.Row="1" VerticalAlignment="Top" HorizontalAlignment="Left">
-            <Button Content="Clear Selection" Margin="10" Click="ClearSelection_Click" />
+        <!-- Left column content RAM Info -->
+        <StackPanel Grid.Column="0" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,492,0,0" Grid.RowSpan="2">
+            <Button Content="Clear RAM Selection" Margin="10" Click="ClearSelection_Click" />
 
             <!-- List of selected line names -->
             <ListBox Name="selectedLinesListBox" Width="200" Height="200" VerticalAlignment="Top" />
+        </StackPanel>
+
+        <!-- Right column content Revit Info, ROW 0 COLUMN 1 -->
+        <ScrollViewer Name="scrollViewer1" Grid.Row="0" Grid.Column="1"  HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
+            <Border BorderBrush="Black" BorderThickness="4">
+                <Canvas Name="canvas1" Width="600" Height="600" MouseMove="Canvas_MouseMove">
+                    <!-- Your lines and circles go here -->
+                </Canvas>
+            </Border>
+        </ScrollViewer>
+
+        <!-- Right column content Revit Info, ROW1, Column 1 -->
+        <StackPanel Grid.Column="1" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="0,492,0,0" Grid.RowSpan="2">
+            <Button Content="Clear Revit Selection" Margin="10" Click="ClearSelection_Click1" />
+
+            <!-- List of selected line names -->
+            <ListBox Name="selectedLinesListBox1" Width="200" Height="200" VerticalAlignment="Top" />
         </StackPanel>
     </Grid>
 </Window>

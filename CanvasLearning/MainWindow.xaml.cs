@@ -120,6 +120,16 @@ namespace WpfApp1
             selectedLinesListBox.Items.Clear(); // Clear the list of selected lines
         }
 
+        private void ClearSelection_Click1(object sender, RoutedEventArgs e)
+        {
+            foreach (Line line in selectedLines)
+            {
+                line.Stroke = Brushes.Black;
+            }
+            selectedLines.Clear();
+            selectedLinesListBox.Items.Clear(); // Clear the list of selected lines
+        }
+
         private void Canvas_MouseMove(object sender, MouseEventArgs e)
         {
             if (canvas.IsMouseCaptured)
