@@ -1,0 +1,1 @@
+sample reading and writing in c sharp
