@@ -18,6 +18,8 @@
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="Auto" />
             <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
+            <ColumnDefinition Width="Auto" />
             <!-- Add more column definitions if needed -->
         </Grid.ColumnDefinitions>
 
@@ -51,6 +53,18 @@
                 </Binding>
             </TextBox.Text>
         </TextBox>
+
+        <TextBlock Grid.Row="1" Grid.Column="4" Text="Rot" VerticalAlignment="Center" />
+        <TextBox Grid.Row="1" Grid.Column="5" Name="RotTextBox" Width="100">
+            <TextBox.Text>
+                <Binding Path="RotValue" UpdateSourceTrigger="PropertyChanged">
+                    <Binding.ValidationRules>
+                        <ExceptionValidationRule />
+                    </Binding.ValidationRules>
+                </Binding>
+            </TextBox.Text>
+        </TextBox>
+
     </Grid>
     
     
