@@ -32,29 +32,25 @@ namespace PanandZoom
             // Attach the PreviewMouseWheel event to handle zoom
             scrollViewer.PreviewMouseWheel += ramScrollViewer_PreviewMouseWheel;
             // Attach mouse events for panning
-            ramCanvas.MouseLeftButtonDown += ramCanvas_MouseLeftButtonDown;
-            ramCanvas.MouseMove += ramCanvas_MouseMove;
-            ramCanvas.MouseLeftButtonUp += ramCanvas_MouseLeftButtonUp;
+            scrollViewer.MouseLeftButtonDown += ramCanvas_MouseLeftButtonDown;
+            scrollViewer.MouseMove += ramCanvas_MouseMove;
+            scrollViewer.MouseLeftButtonUp += ramCanvas_MouseLeftButtonUp;
             
         }
         private void ramScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
             e.Handled = true; // Prevent standard scrolling
 
-            Point mousePos = e.GetPosition(ramCanvas);
+            Point mousePos = e.GetPosition(scrollViewer);
 
             if (e.Delta > 0)
             {
-                // Zoom in // You can adjust the zoom factor as needed
                 ramZoomFactor *= 1.2;
             }
             else
             {
-                // Zoom out
                 ramZoomFactor /= 1.2;
             }
-            // Apply the zoom factor to the canvas content
-            //ramCanvas.LayoutTransform = new ScaleTransform(ramZoomFactor, ramZoomFactor);
 
             // Apply the zoom factor to the canvas content
             ramCanvas.LayoutTransform = new ScaleTransform(ramZoomFactor, ramZoomFactor);
@@ -66,27 +62,28 @@ namespace PanandZoom
         private void ramCanvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             //PANNING FUNCTION
+            //ramLastMousePosition = e.GetPosition(scrollViewer);
             ramLastMousePosition = e.GetPosition(scrollViewer);
-            ramCanvas.CaptureMouse();
+            scrollViewer.CaptureMouse();
         }
 
         private void ramCanvas_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
         {
-            ramCanvas.ReleaseMouseCapture();
+            scrollViewer.ReleaseMouseCapture();
         }
 
         private void ramCanvas_MouseMove(object sender, MouseEventArgs e)
         {
-            if (ramCanvas.IsMouseCaptured)
-            //if (e.LeftButton == MouseButtonState.Pressed)
+            //Panning function with mouse down event
+            if (e.LeftButton == MouseButtonState.Pressed)
             {
                 System.Windows.Point position = e.GetPosition(scrollViewer);
-                //System.Windows.Point position = e.GetPosition(this);
                 double offsetX = position.X - ramLastMousePosition.X;
                 double offsetY = position.Y - ramLastMousePosition.Y;
 
                 // Update the position of the canvas content
                 var transform = ramCanvas.RenderTransform as TranslateTransform ?? new TranslateTransform();
+
                 transform.X += offsetX;
                 transform.Y += offsetY;
                 ramCanvas.RenderTransform = transform;
