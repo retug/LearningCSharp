@@ -35,7 +35,7 @@ namespace PanandZoom
             scrollViewer.MouseLeftButtonDown += ramCanvas_MouseLeftButtonDown;
             scrollViewer.MouseMove += ramCanvas_MouseMove;
             scrollViewer.MouseLeftButtonUp += ramCanvas_MouseLeftButtonUp;
-            
+
         }
         private void ramScrollViewer_PreviewMouseWheel(object sender, MouseWheelEventArgs e)
         {
@@ -62,9 +62,9 @@ namespace PanandZoom
         private void ramCanvas_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
             //PANNING FUNCTION
-            //ramLastMousePosition = e.GetPosition(scrollViewer);
             ramLastMousePosition = e.GetPosition(scrollViewer);
             scrollViewer.CaptureMouse();
+            coordinatesTextBlock.Text = $"RAM - X: {ramLastMousePosition.X}, Y: {ramLastMousePosition.Y}";
         }
 
         private void ramCanvas_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
@@ -89,6 +89,9 @@ namespace PanandZoom
                 ramCanvas.RenderTransform = transform;
 
                 ramLastMousePosition = position;
+                // Update TextBlock with coordinates
+                coordinatesTextBlock.Text = $"RAM - X: {ramLastMousePosition.X}, Y: {ramLastMousePosition.Y}";
+                pointTextBlock.Text = $"position - X: {position.X}, Y: {position.Y}";
             }
         }
     }
