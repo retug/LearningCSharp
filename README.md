@@ -1,5 +1,5 @@
 # LearningCSharp
-Learning C Sharp XAML and WPF
+
 How can I get windows forms in this?
 ![image](https://github.com/retug/LearningCSharp/assets/45467091/f8a297f5-656a-4efc-b9fe-38350edd4085)
 
