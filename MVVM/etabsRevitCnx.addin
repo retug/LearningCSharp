@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RevitAddIns>
+ <AddIn Type="Command">
+       <Name>ETABs Revit Connection</Name>
+       <FullClassName>etabsRevitCnx.Class1</FullClassName>
+       <Text>ETABs Revit Connection</Text>
+       <Description>Start the connection</Description>
+       <VisibilityMode>AlwaysVisible</VisibilityMode>
+       <Assembly>C:\Users\16142\Desktop\Retug\Own Work\Learning MVVM\etabsRevitCnx\etabsRevitCnx\bin\Debug\etabsRevitCnx.dll</Assembly>
+       <AddInId>CE6FC6A0-715C-43B6-BA8E-2709D78E8B4A</AddInId>
+	 <VendorId>retug</VendorId>
+    <VendorDescription>Retug, www.re-tug.com</VendorDescription>
+ </AddIn>
+</RevitAddIns>
