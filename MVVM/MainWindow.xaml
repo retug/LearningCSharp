@@ -12,9 +12,9 @@
             <!-- Row 0 for buttons -->
             <RowDefinition Height="600" />
         </Grid.RowDefinitions>
-        <Button x:Name="GatherBeamsButton" Content="Select Revit Beams" Margin="5" Click="GatherBeamsButton_Click" Height="40">
+        <Button x:Name="GatherBeamsButton"  Command="{Binding GatherBeamsCommand}" Content="Select Revit Beams" Margin="5" Height="40">
         </Button>
-        <DataGrid Grid.Row="1" Name="revitBeamMapping" AutoGenerateColumns="False">
+        <DataGrid Grid.Row="1" Name="revitBeamMapping" AutoGenerateColumns="False" ItemsSource="{Binding StructuralFramingElements}">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Revit Beam" Binding="{Binding Name}" />
             </DataGrid.Columns>

@@ -33,50 +33,15 @@ namespace etabsRevitCnx
 
             doc = UiDoc.Document;
             Title = "ETABs Revit Connection";
-            InitializeComponent();
+            InitializeComponent(); 
+            DataContext = new MainViewModel(uidoc);
         }
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-
         }
         private void Create_Click(object sender, RoutedEventArgs e)
         {
             Close();
-        }
-
-        private void GatherBeamsButton_Click(object sender, RoutedEventArgs e)
-        {
-            
-            this.Hide();
-            try
-            {
-                //var elements = uidoc.Selection.PickObjects(ObjectType.Element, "Select Elements");
-                IList<Reference> elements = uidoc.Selection.PickObjects(ObjectType.Element, "Select Elements");
-                ICollection<ElementId> selectedElementIds = new List<ElementId>();
-
-                foreach (Reference elementRef in elements)
-                {
-                    ElementId elementId = elementRef.ElementId;
-                    selectedElementIds.Add(elementId);
-                }
-                // Create a FilteredElementCollector to filter elements by category
-                FilteredElementCollector collector = new FilteredElementCollector(doc, selectedElementIds);
-
-                structuralFramingElements = collector
-                    .OfClass(typeof(FamilyInstance)) // Assuming structural framing elements are FamilyInstances
-                    .Where(elem => elem.Category.Name == "Structural Framing");
-
-                revitBeamMapping.ItemsSource = structuralFramingElements;
-                // Show the window, use show to make modeless. Not showdialog
-                this.Show();
-
-                // Bring the window to the front
-                this.Activate();
-            }
-            catch (Exception)
-            {
-
-            }
         }
     }
 }
