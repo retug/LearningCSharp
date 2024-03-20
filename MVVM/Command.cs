@@ -20,28 +20,9 @@ namespace etabsRevitCnx
         {
             //Get application and document objects
             UIApplication uiapp = commandData.Application;
-            Document uidoc = uiapp.ActiveUIDocument.Document;
-
+            UIDocument uidoc = uiapp.ActiveUIDocument;
             MainWindow mainWindow = new MainWindow(uidoc);
             mainWindow.Show();
-
-            //Define a reference Object to accept the pick result
-            Reference pickedref = null;
-
-            //Pick a group
-            Selection sel = uiapp.ActiveUIDocument.Selection;
-            pickedref = sel.PickObject(ObjectType.Element, "Please select a group");
-            Element elem = uidoc.GetElement(pickedref);
-            Group group = elem as Group;
-
-            //Pick point
-            XYZ point = sel.PickPoint("Please pick a point to place group");
-
-            //Place the group
-            Transaction trans = new Transaction(uidoc);
-            trans.Start("Lab");
-            uidoc.Create.PlaceGroup(point, group.GroupType);
-            trans.Commit();
 
             return Result.Succeeded;
         }

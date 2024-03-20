@@ -7,7 +7,18 @@
              mc:Ignorable="d" 
              d:DesignHeight="1000" d:DesignWidth="1000">
     <Grid>
-        <Label Grid.Row="0" Content="Select Elements"/>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto" />
+            <!-- Row 0 for buttons -->
+            <RowDefinition Height="600" />
+        </Grid.RowDefinitions>
+        <Button x:Name="GatherBeamsButton" Content="Select Revit Beams" Margin="5" Click="GatherBeamsButton_Click" Height="40">
+        </Button>
+        <DataGrid Grid.Row="1" Name="revitBeamMapping" AutoGenerateColumns="False">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Revit Beam" Binding="{Binding Name}" />
+            </DataGrid.Columns>
+        </DataGrid>
     </Grid>
     
 
