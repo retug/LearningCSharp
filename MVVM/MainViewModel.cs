@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using Autodesk.Revit.UI.Selection;
+using Autodesk.Revit.DB.Events;
 using System.Windows.Input;
 
 namespace etabsRevitCnx
@@ -42,12 +43,69 @@ namespace etabsRevitCnx
             _execute();
         }
     }
+
+    public class StructuralFramingUpdater : IUpdater
+    {
+        static AddInId m_appId;
+        static UpdaterId m_updaterId;
+        private readonly MainViewModel _mainViewModel;
+
+        public StructuralFramingUpdater(AddInId id, MainViewModel mainViewModel)
+        {
+            m_appId = id;
+            m_updaterId = new UpdaterId(m_appId, new Guid("FBFBF6B2-4C06-42d4-97C1-D1B4EB593EFF"));
+            _mainViewModel = mainViewModel;
+        }
+
+        public void Execute(UpdaterData data)
+        {
+            IEnumerable<RevitFramingModel> structuralFramingElements = _mainViewModel.StructuralFramingElements;
+            // Check if the modified element is a structural framing element
+            foreach (ElementId elementId in data.GetModifiedElementIds())
+            {
+                Element element = data.GetDocument().GetElement(elementId);
+                if (element != null && element.Category.Name == "Structural Framing")
+                {
+                    // Update the corresponding RevitFramingModel
+                    RevitFramingModel framingModel = structuralFramingElements.FirstOrDefault(m => m.Id == element.UniqueId);
+                    if (framingModel != null)
+                    {
+                        framingModel.Name = element.Name;
+                    }
+                }
+            }
+            _mainViewModel.StructuralFramingElements = structuralFramingElements;
+        }
+
+        public string GetAdditionalInformation()
+        {
+            return "Structural Framing Updater: updates structural framing models when changes occur";
+        }
+
+        public ChangePriority GetChangePriority()
+        {
+            return ChangePriority.Annotations;
+        }
+
+        public UpdaterId GetUpdaterId()
+        {
+            return m_updaterId;
+        }
+
+        public string GetUpdaterName()
+        {
+            return "Structural Framing Updater";
+        }
+    }
+
+
     public class MainViewModel : INotifyPropertyChanged
     {
         private UIDocument _uidoc;
         private IEnumerable<RevitFramingModel> _structuralFramingElements;
 
         public event PropertyChangedEventHandler PropertyChanged;
+        
 
         public ICommand GatherBeamsCommand { get; }
 
@@ -65,7 +123,13 @@ namespace etabsRevitCnx
         {
             _uidoc = uiDoc;
             GatherBeamsCommand = new RelayCommand(GatherBeams);
+
+
+            StructuralFramingUpdater updater = new StructuralFramingUpdater(_uidoc.Application.ActiveAddInId, this);
+            UpdaterRegistry.RegisterUpdater(updater);
+            UpdaterRegistry.AddTrigger(updater.GetUpdaterId(), new ElementClassFilter(typeof(FamilyInstance)), Element.GetChangeTypeAny());
         }
+
 
         public void GatherBeams()
         {
@@ -85,7 +149,11 @@ namespace etabsRevitCnx
                 var structuralFramingElements = collector
                 .OfClass(typeof(FamilyInstance))
                     .Where(elem => elem.Category.Name == "Structural Framing")
-                    .Select(elem => new RevitFramingModel { Name = elem.Name });
+                    .Select(elem => new RevitFramingModel
+                    {
+                        Name = elem.Name,
+                        Id = elem.UniqueId // Assigning UniqueId as the Id
+                    });
 
                 StructuralFramingElements = structuralFramingElements;
                 //revitBeamMapping.ItemsSource = structuralFramingElements;

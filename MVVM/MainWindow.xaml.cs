@@ -25,7 +25,6 @@ namespace etabsRevitCnx
     {
         public UIDocument uidoc { get; }
         public Document doc { get; }
-        public IEnumerable<Element> structuralFramingElements { get; set; }
 
         public MainWindow(UIDocument UiDoc)
         {

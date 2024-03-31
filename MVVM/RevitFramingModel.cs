@@ -9,7 +9,21 @@ namespace etabsRevitCnx
 {
     public class RevitFramingModel : INotifyPropertyChanged
     {
+        private string _id;
         private string _name;
+
+        public string Id
+        {
+            get { return _id; }
+            set
+            {
+                if (_id != value)
+                {
+                    _id = value;
+                    OnPropertyChanged(nameof(Id));
+                }
+            }
+        }
 
         public string Name
         {
