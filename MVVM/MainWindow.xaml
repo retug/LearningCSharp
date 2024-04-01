@@ -5,11 +5,13 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:etabsRevitCnx"
              mc:Ignorable="d" 
+             d:DataContext="{d:DesignInstance Type=local:MainViewModel}"
              d:DesignHeight="1000" d:DesignWidth="1000">
+    <!-- Add DataContext based on post -->
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
-            <!-- Row 0 for buttons -->
+            
             <RowDefinition Height="600" />
         </Grid.RowDefinitions>
         <Button x:Name="GatherBeamsButton"  Command="{Binding GatherBeamsCommand}" Content="Select Revit Beams" Margin="5" Height="40">

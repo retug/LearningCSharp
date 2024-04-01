@@ -7,11 +7,8 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Autodesk.Revit.DB;
-using Autodesk.Revit.UI;
-using Autodesk.Revit.UI.Selection;
-using Autodesk.Revit.DB.Events;
 using System.Windows.Input;
+using System.Collections.ObjectModel;
 
 namespace etabsRevitCnx
 {
@@ -59,7 +56,7 @@ namespace etabsRevitCnx
 
         public void Execute(UpdaterData data)
         {
-            IEnumerable<RevitFramingModel> structuralFramingElements = _mainViewModel.StructuralFramingElements;
+            ObservableCollection<RevitFramingModel> structuralFramingElements = _mainViewModel.StructuralFramingElements;
             // Check if the modified element is a structural framing element
             foreach (ElementId elementId in data.GetModifiedElementIds())
             {
@@ -102,14 +99,24 @@ namespace etabsRevitCnx
     public class MainViewModel : INotifyPropertyChanged
     {
         private UIDocument _uidoc;
-        private IEnumerable<RevitFramingModel> _structuralFramingElements;
+        //private IEnumerable<RevitFramingModel> _structuralFramingElements;
+        private ObservableCollection<RevitFramingModel> _structuralFramingElements = new ObservableCollection<RevitFramingModel>();
 
         public event PropertyChangedEventHandler PropertyChanged;
         
 
         public ICommand GatherBeamsCommand { get; }
 
-        public IEnumerable<RevitFramingModel> StructuralFramingElements
+        //public IEnumerable<RevitFramingModel> StructuralFramingElements
+        //{
+        //    get { return _structuralFramingElements; }
+        //    set
+        //    {
+        //        _structuralFramingElements = value;
+        //        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(StructuralFramingElements)));
+        //    }
+        //}
+        public ObservableCollection<RevitFramingModel> StructuralFramingElements
         {
             get { return _structuralFramingElements; }
             set
@@ -155,7 +162,7 @@ namespace etabsRevitCnx
                         Id = elem.UniqueId // Assigning UniqueId as the Id
                     });
 
-                StructuralFramingElements = structuralFramingElements;
+                StructuralFramingElements = new ObservableCollection<RevitFramingModel>(structuralFramingElements);
                 //revitBeamMapping.ItemsSource = structuralFramingElements;
             }
             catch (Exception)
